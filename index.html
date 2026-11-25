@@ -9,7 +9,7 @@
 
 <body>
 
-  <!-- Menu Esquerdo: Controle de Sensores -->
+  <!-- Menu Esquerdo: Controle de Exibição de Sensores -->
   <div id="sidebar-sensors" class="sidebar sidebar-left">
     <a href="javascript:void(0)" class="close-btn" onclick="toggleNavSensors()">&times;</a>
     <h2>Painel de Exibição</h2>
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <!-- Botões Superiores Estilizados -->
+  <!-- Botões Superiores de Acesso -->
   <span class="menu-btn menu-btn-left" onclick="toggleNavSensors()">⚙️ Sensores</span>
   <span class="menu-btn menu-btn-right" onclick="toggleNavHistory()">📊 Histórico</span>
 
@@ -56,7 +56,7 @@
     <div class="date-badge"><span id="datetime">Carregando data...</span></div>
   </div>
 
-  <!-- Grid dos Medidores -->
+  <!-- Grid dos Medidores (Gauges) -->
   <div class="dashboard-grid">
     <div class="card" id="card-temp">
       <canvas id="an_gauge_1" data-title="Temperatura" data-units="&deg;C" width="280" height="330"
