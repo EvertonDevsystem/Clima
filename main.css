@@ -1,0 +1,259 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Botões do Menu */
+.menu-btn {
+    position: absolute;
+    top: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #38bdf8;
+    cursor: pointer;
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 10px 18px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.menu-btn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: translateY(-2px);
+}
+
+.menu-btn-left { left: 25px; }
+.menu-btn-right { right: 25px; }
+
+/* Gavetas Laterais (Sidebar) */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    background-color: #0b1329;
+    overflow-x: hidden;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 70px;
+    box-shadow: 0 0 35px rgba(0,0,0,0.7);
+}
+
+.sidebar-left {
+    left: 0;
+    border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-right {
+    right: 0;
+    border-left: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar h2 {
+    color: #38bdf8;
+    font-size: 1.25rem;
+    padding: 0 22px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.menu-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 15px 22px;
+}
+
+.sidebar .close-btn {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    font-size: 28px;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sidebar .close-btn:hover {
+    color: #fff;
+}
+
+/* Indicador de Status */
+.status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ef476f;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ef476f;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.status-dot.active {
+    background-color: #06d6a0;
+    box-shadow: 0 0 10px #06d6a0;
+}
+
+/* Histórico Organizado em Cards Separados por Dias */
+.history-list {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.history-day-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.history-day-card:hover {
+    background: rgba(56, 189, 248, 0.07);
+    border-color: rgba(56, 189, 248, 0.2);
+    transform: translateX(4px);
+}
+
+.history-day-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #38bdf8;
+    margin-bottom: 6px;
+}
+
+.history-day-metrics {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: #cbd5e1;
+}
+
+.history-placeholder {
+    color: #64748b;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+/* Switches do Menu Esquerdo */
+.switch-container {
+    display: flex;
+    align-items: center;
+    padding: 12px 22px;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.switch-container:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.switch-container input {
+    margin-right: 12px;
+    width: 17px;
+    height: 17px;
+    accent-color: #38bdf8;
+    cursor: pointer;
+}
+
+/* Cabeçalho */
+.header-container {
+    text-align: center;
+    margin-bottom: 35px;
+    margin-top: 10px;
+}
+
+h1 {
+    font-size: 2.4rem;
+    color: #38bdf8;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    text-shadow: 0 2px 15px rgba(56, 189, 248, 0.25);
+}
+
+.date-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 1rem;
+    color: #94a3b8;
+    backdrop-filter: blur(5px);
+}
+
+/* Grid dos Medidores */
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    max-width: 1100px;
+    width: 100%;
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.25);
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    h1 {
+        font-size: 1.7rem;
+    }
+}

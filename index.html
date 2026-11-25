@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estação de Monitoramento IoT</title>  
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+  <!-- Menu Esquerdo: Controle de Sensores -->
+  <div id="sidebar-sensors" class="sidebar sidebar-left">
+    <a href="javascript:void(0)" class="close-btn" onclick="toggleNavSensors()">&times;</a>
+    <h2>Painel de Exibição</h2>
+    <hr class="menu-divider">
+    
+    <label class="switch-container">
+      <input type="checkbox" id="toggle-temp" checked onchange="toggleSensor('card-temp', this.checked)">
+      <span class="slider"></span> Exibir Temperatura
+    </label>
+
+    <label class="switch-container">
+      <input type="checkbox" id="toggle-hum" checked onchange="toggleSensor('card-hum', this.checked)">
+      <span class="slider"></span> Exibir Umidade
+    </label>
+
+    <label class="switch-container">
+      <input type="checkbox" id="toggle-wind" checked onchange="toggleSensor('card-wind', this.checked)">
+      <span class="slider"></span> Exibir Vento
+    </label>
+  </div>
+
+  <!-- Menu Direito: Histórico Separado por Dias da Semana -->
+  <div id="sidebar-history" class="sidebar sidebar-right">
+    <a href="javascript:void(0)" class="close-btn" onclick="toggleNavHistory()">&times;</a>
+    <h2>Histórico da Semana</h2>
+    <hr class="menu-divider">
+    
+    <div class="history-list" id="history-container">
+      <div class="history-placeholder">Aguardando a primeira leitura dos sensores para registrar o histórico...</div>
+    </div>
+  </div>
+
+  <!-- Botões Superiores Estilizados -->
+  <span class="menu-btn menu-btn-left" onclick="toggleNavSensors()">⚙️ Sensores</span>
+  <span class="menu-btn menu-btn-right" onclick="toggleNavHistory()">📊 Histórico</span>
+
+  <!-- Cabeçalho Principal -->
+  <div class="header-container">
+    <h1>Estação Meteorológica IoT</h1>
+    <div class="status-bar">
+      <span class="status-dot" id="status-dot"></span> 
+      <span id="connection-status">Aguardando sinal dos componentes...</span>
+    </div>
+    <div class="date-badge"><span id="datetime">Carregando data...</span></div>
+  </div>
+
+  <!-- Grid dos Medidores -->
+  <div class="dashboard-grid">
+    <div class="card" id="card-temp">
+      <canvas id="an_gauge_1" data-title="Temperatura" data-units="&deg;C" width="280" height="330"
+        data-major-ticks="-20 -10 0 10 20 30 40 50 60 70" data-type="canv-gauge" data-min-value="-20"
+        data-max-value="70" data-highlights="-20 0 #3a86ff, 0 10 #4cc9f0, 10 30 #06d6a0, 30 40 #ffd166, 40 70 #ef476f">
+      </canvas>
+    </div>
+
+    <div class="card" id="card-hum">
+      <canvas id="an_gauge_2" data-title="Umidade" data-units="%" width="280" height="330"
+        data-major-ticks="0 10 20 30 40 50 60 70 80 90" data-type="canv-gauge" data-min-value="0" data-max-value="90"
+        data-highlights="0 20 #ef476f, 20 40 #ffd166, 40 70 #06d6a0, 70 90 #3a86ff">
+      </canvas>
+    </div>
+
+    <div class="card" id="card-wind">
+      <canvas id="an_gauge_3" data-title="Vento" data-units="Km/h" width="280" height="330"
+        data-major-ticks="0 10 20 30 40 50 60 70 80 90" data-type="canv-gauge" data-min-value="0" data-max-value="90"
+        data-highlights="0 20 #06d6a0, 20 40 #3a86ff, 40 60 #ffd166, 60 90 #ef476f">
+      </canvas>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
