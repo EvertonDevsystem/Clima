@@ -1,7 +1,6 @@
 var data_val = 0;
 var primeiraLeituraRealizada = false;
 
-// Funções de Controle dos Menus Laterais
 function toggleNavSensors() {
   var sidebar = document.getElementById("sidebar-sensors");
   sidebar.style.width = sidebar.style.width === "280px" ? "0" : "280px";
@@ -19,7 +18,6 @@ function toggleSensor(cardId, show) {
   }
 }
 
-// Preenche o histórico separando cada dia em cards individuais
 function preencherHistorico(temp, hum, wind) {
   var historyContainer = document.getElementById("history-container");
   var dias = ["Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado", "Domingo"];
@@ -44,7 +42,6 @@ function preencherHistorico(temp, hum, wind) {
   historyContainer.innerHTML = htmlContent;
 }
 
-// Requisição AJAX ao ESP32
 function GetArduinoInputs() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -57,17 +54,14 @@ function GetArduinoInputs() {
           var hum = analogs[1].childNodes[0].nodeValue;
           var wind = analogs[2].childNodes[0].nodeValue;
 
-          // Confirmação da primeira leitura bem-sucedida dos componentes
+          // Trava ativada apenas após receber a primeira leitura real dos componentes
           if (!primeiraLeituraRealizada) {
             primeiraLeituraRealizada = true;
             document.getElementById("status-dot").classList.add("active");
             document.getElementById("connection-status").innerText = "Sensores Conectados e Ativos";
-            
-            // Registra o histórico detalhado por dias somente após o primeiro dado real
             preencherHistorico(temp, hum, wind);
           }
 
-          // Atualiza os ponteiros dos gauges no painel principal
           if (Gauge.Collection.get('an_gauge_1')) Gauge.Collection.get('an_gauge_1').setValue(parseFloat(temp));
           if (Gauge.Collection.get('an_gauge_2')) Gauge.Collection.get('an_gauge_2').setValue(parseFloat(hum));
           if (Gauge.Collection.get('an_gauge_3')) Gauge.Collection.get('an_gauge_3').setValue(parseFloat(wind));
@@ -80,7 +74,6 @@ function GetArduinoInputs() {
   setTimeout(GetArduinoInputs, 3000);
 }
 
-// Relógio em tempo real
 function DisplayCurrentTime() {
   var dt = new Date();
   var weekday = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"];
@@ -96,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
   DisplayCurrentTime();
   GetArduinoInputs();
 }, false);
-
 
 /* ==========================================
    Gauge Code Starts (Biblioteca Original)
