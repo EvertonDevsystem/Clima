@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-// Definição dos pinos (constantes em letras maiúsculas)
+// Definição dos pinos 
 const int PIN_VERMELHO = 2;
 const int PIN_AMARELO   = 3;
 const int PIN_VERDE     = 4;
@@ -11,9 +11,9 @@ const int PIN_TRIG      = 8;
 // Instância do Servo
 Servo servo1;
 
-// Variáveis para controle de tempo do Servo (Substituindo o delay)
+// Variáveis para controle de tempo do Servo
 unsigned long tempoAnteriorServo = 0;
-const long intervaloServo = 2000; // Tempo em milissegundos para mexer o servo
+const long intervaloServo = 2000; 
 int posicaoServo = 0;
 
 void setup() {
@@ -70,7 +70,7 @@ void loop() {
   Serial.println(" cm");
 
   // 3. Controle do Semáforo baseado na distância
-  if (distancia > 0 && distancia <= 50) { // Garante que leituras zeradas/erros não acionem o vermelho
+  if (distancia > 0 && distancia <= 50) {
     digitalWrite(PIN_VERMELHO, HIGH);
     digitalWrite(PIN_AMARELO, LOW);
     digitalWrite(PIN_VERDE, LOW);
@@ -86,7 +86,7 @@ void loop() {
     digitalWrite(PIN_VERDE, HIGH);
   }
 
-  delay(60); // Pequeno intervalo recomendado entre leituras do HC-SR04
+  delay(60); // Pequeno intervalo 
 }
 
 void apagarSemaforo() {
