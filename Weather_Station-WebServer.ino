@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "index.h"  // Certifique-se de que o HTML acima está salvo neste arquivo de cabeçalho
+#include "index.h"  
 
 WebServer server(80);
  
