@@ -1,45 +1,156 @@
-/* Cards Individuais para os Dias da Semana no Histórico */
-.history-list {
-    padding: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.history-day-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: transform 0.2s, background 0.2s;
-}
-
-.history-day-card:hover {
-    background: rgba(56, 189, 248, 0.07);
-    border-color: rgba(56, 189, 248, 0.2);
-    transform: translateX(4px);
-}
-
-.history-day-title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #38bdf8;
-    margin-bottom: 6px;
-}
-
-.history-day-metrics {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.88rem;
-    color: #cbd5e1;
-}
-
-.history-placeholder {
-    color: #64748b;
-    font-style: italic;
-    font-size: 0.9rem;
-    padding: 20px 10px;
+body {
     text-align: center;
+    margin: 0;
+    padding: 10px;
+    background-color: #12161f;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+}
+
+/* --- Menus Laterais (Sidebars) --- */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    background-color: #1a2234;
+    overflow-x: hidden;
+    transition: 0.3s ease;
+    padding-top: 60px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.sidebar-left {
+    left: 0;
+}
+
+.sidebar-right {
+    right: 0;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    padding: 0 20px;
+    margin-bottom: 15px;
+}
+
+.menu-divider {
+    border-color: #334155;
+    margin: 0 20px 20px 20px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: #fff;
+    text-decoration: none;
+}
+.close-btn:hover {
+    color: #ef476f;
+}
+
+/* --- Estilo Moderno para os Switches (Alternadores) --- */
+.switch-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.switch-group:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.switch-group input {
+    cursor: pointer;
+    width: 40px;
+    height: 20px;
+    accent-color: #3a86ff;
+}
+
+/* --- Botões Superiores Estilizados --- */
+.top-btn {
+    position: absolute;
+    top: 15px;
+    z-index: 100;
+    background-color: #1e293b;
+    color: #fff;
+    border: 1px solid #334155;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.top-btn:hover {
+    background-color: #334155;
+    transform: translateY(-2px);
+}
+
+.btn-left {
+    left: 20px;
+}
+
+.btn-right {
+    right: 20px;
+}
+
+/* --- Cabeçalho e Grid dos Medidores --- */
+.header-container {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.status-dot {
+    height: 10px;
+    width: 10px;
+    background-color: #06d6a0;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    box-shadow: 0 0 8px #06d6a0;
+}
+
+.date-badge {
+    font-size: 1rem;
+    color: #ffd166;
+    margin-top: 5px;
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
 }
