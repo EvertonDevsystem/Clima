@@ -5,7 +5,7 @@
 #include <NewPing.h>
 #include <Servo.h>
 
-// Pinos
+// Definição dos Pinos
 const int PIN_VERMELHO = 2;
 const int PIN_AMARELO  = 3;
 const int PIN_VERDE    = 4;
@@ -40,7 +40,7 @@ void handleRoot() {
 void XML_response() {
   float temperatura = dht.readTemperature();
   float umidade = dht.readHumidity();
-  float vento = 15.0; 
+  float vento = 15.0; // Valor simulado do vento (ou leitura física se possuir anemômetro)
   unsigned int distancia = sonar.convert_cm(sonar.ping_median(5));
 
   if (isnan(temperatura)) temperatura = 0.0;
