@@ -1,115 +1,123 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include <Servo.h>
 #include <DHT.h>
 #include <NewPing.h>
-#include "index.h"  // Arquivo HTML da página web
+#include <Servo.h>
 
-WebServer server(80);
-
-// --- Definição dos Pinos ---
+// Definição dos Pinos
 const int PIN_VERMELHO = 2;
-const int PIN_AMARELO   = 3;
-const int PIN_VERDE     = 4;
-const int PIN_SERVO     = 5;
-const int PIN_ECHO      = 18;  // Pino Echo do ultrassônico
-const int PIN_TRIG      = 19;  // Pino Trigger do ultrassônico
+const int PIN_AMARELO  = 3;
+const int PIN_VERDE    = 4;
+const int PIN_SERVO    = 5;
+const int TRIGGER_PIN  = 19;
+const int ECHO_PIN     = 18;
 
-// --- Configuração do Sensor DHT22 (Temperatura e Umidade) ---
-#define DHTPIN 4       
-#define DHTTYPE DHT22  
-DHT dht(DHTPIN, DHTTYPE);
-
-// --- Configuração do Sensor Ultrassônico (Vento) ---
-#define MAX_DISTANCE 300
-NewPing sonar(PIN_TRIG, PIN_ECHO, MAX_DISTANCE);
-
-// Instância do Servo
+// Sensores e Atuadores
 Servo servo1;
-unsigned long tempoAnteriorServo = 0;
-const long intervaloServo = 2000; 
-int posicaoServo = 0;
+#define DHTPIN 4
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, 300);
 
-// Credenciais da Rede Wi-Fi
+// Credenciais Wi-Fi e ThingSpeak
 const char* ssid = "Rede";
 const char* password = "Senha";
+const char* serverAddress = "api.thingspeak.com";
+String writeAPIKey = "SUA_WRITE_API_KEY_AQUI"; // Cole sua Write API Key do ThingSpeak aqui
+
+WebServer server(80);
+unsigned long ultimoEnvio = 0;
+const long intervaloEnvio = 20000;
+unsigned long tempoAnteriorServo = 0;
+int posicaoServo = 0;
 
 void handleRoot() {
-  String s = MAIN_page; 
-  server.send(200, "text/html, charset=utf-8", s); 
+  // O conteúdo HTML é carregado diretamente pelo index.html do navegador ou servido pelo PROGMEM se preferir.
 }
 
-void handleADC() {
-  XML_response();
+// Resposta XML enviada para a página web com as 4 variáveis
+void XML_response() {
+  float temperatura = dht.readTemperature();
+  float umidade = dht.readHumidity();
+  float vento = 15.0; // Valor simulado do vento (ou leitura física se possuir anemômetro)
+  unsigned int distancia = sonar.convert_cm(sonar.ping_median(5));
+
+  if (isnan(temperatura)) temperatura = 0.0;
+  if (isnan(umidade)) umidade = 0.0;
+
+  String content = "<?xml version=\"1.0\" ?>";
+  content += "<inputs>";
+  content += "<val>" + String(temperatura, 1) + "</val>";
+  content += "<val>" + String(umidade, 1) + "</val>";
+  content += "<val>" + String(vento, 1) + "</val>";
+  content += "<val>" + String(distancia) + "</val>";
+  content += "</inputs>";
+
+  server.sendHeader("Cache-Control", "no-cache");
+  server.send(200, "text/xml", content);
 }
 
-void setup() {
-  Serial.begin(115200);
-  Serial.println("\nInicializando Estação Meteorológica...");
-
-  // Inicialização dos componentes
-  dht.begin();
-  servo1.attach(PIN_SERVO);
-  servo1.write(posicaoServo);
-
+void setupESP32() {
   pinMode(PIN_VERMELHO, OUTPUT);
   pinMode(PIN_AMARELO, OUTPUT);
   pinMode(PIN_VERDE, OUTPUT);
+  
+  servo1.attach(PIN_SERVO);
+  servo1.write(posicaoServo);
+  
+  dht.begin();
+  Serial.begin(115200);
 
-  // Conexão Wi-Fi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-
-  Serial.print("Conectando ao Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED) {      
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-    
-  Serial.println("\nConectado com sucesso!");
-  Serial.print("IP de Acesso: http://");
-  Serial.println(WiFi.localIP());  
 
-  server.on("/", handleRoot);      
-  server.on("/readADC", handleADC);
- 
-  server.begin();                  
-  Serial.println("Servidor HTTP iniciado!");
+  server.on("/readSensors", XML_response);
+  server.begin();
 }
 
-void loop() {   
+void loopESP32() {
   server.handleClient();
-  
-  // Controle não bloqueante do Servo (Millis)
-  unsigned long tempoAtual = millis();
-  if (tempoAtual - tempoAnteriorServo >= intervaloServo) {
-    tempoAnteriorServo = tempoAtual;
+
+  // Movimentação do Servo sem travar o ESP32 (Millis)
+  if (millis() - tempoAnteriorServo >= 2000) {
+    tempoAnteriorServo = millis();
     posicaoServo = (posicaoServo == 0) ? 180 : 0;
     servo1.write(posicaoServo);
   }
-  
-  delay(1);
-}
 
-// Resposta XML enviada para o site com os dados reais dos sensores
-void XML_response() {
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
-  
-  if (isnan(temperature)) temperature = 0.0;
-  if (isnan(humidity)) humidity = 0.0;
-  
-  unsigned int distancia = sonar.convert_cm(sonar.ping_median(5));
-  float velocidadeVento = (distancia > 0 && distancia < 90) ? (float)distancia : 10.0; 
+  // Envio periódico para o ThingSpeak a cada 20 segundos
+  if (millis() - ultimoEnvio >= intervaloEnvio) {
+    ultimoEnvio = millis();
+    
+    WiFiClient client;
+    if (client.connect(serverAddress, 80)) {
+      float t = dht.readTemperature();
+      float h = dht.readHumidity();
+      float v = 15.0;
+      unsigned int d = sonar.convert_cm(sonar.ping_median(5));
 
-  String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-  content += "<inputs>";
-  content += "<analog>" + String(temperature, 1) + "</analog>";
-  content += "<analog>" + String(humidity, 1) + "</analog>";
-  content += "<analog>" + String(velocidadeVento, 1) + "</analog>";
-  content += "</inputs>"; 
-   
-  server.sendHeader("Cache-Control", "no-cache");
-  server.send(200, "text/xml", content);
+      String postStr = writeAPIKey;
+      postStr += "&field1=" + String(t);
+      postStr += "&field2=" + String(h);
+      postStr += "&field3=" + String(v);
+      postStr += "&field4=" + String(d);
+      postStr += "\r\n\r\n";
+
+      client.print("POST /update HTTP/1.1\n");
+      client.print("Host: api.thingspeak.com\n");
+      client.print("Connection: close\n");
+      client.print("X-THINGSPEAKAPIKEY: " + writeAPIKey + "\n");
+      client.print("Content-Type: application/x-www-form-urlencoded\n");
+      client.print("Content-Length: ");
+      client.print(postStr.length());
+      client.print("\n\n");
+      client.print(postStr);
+      client.stop();
+    }
+  }
 }
