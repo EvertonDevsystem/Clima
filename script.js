@@ -1,6 +1,7 @@
 var data_val = 0;
 var primeiraLeituraRealizada = false;
 
+// Funções para abrir/fechar as gavetas dos menus
 function toggleNavSensors() {
   var sidebar = document.getElementById("sidebar-sensors");
   sidebar.style.width = sidebar.style.width === "280px" ? "0" : "280px";
@@ -11,6 +12,7 @@ function toggleNavHistory() {
   sidebar.style.width = sidebar.style.width === "340px" ? "0" : "340px";
 }
 
+// Ocultar ou exibir os cartões dos medidores
 function toggleSensor(cardId, show) {
   var card = document.getElementById(cardId);
   if (card) {
@@ -18,6 +20,7 @@ function toggleSensor(cardId, show) {
   }
 }
 
+// Preenche o histórico separando por dias da semana somente após a 1ª leitura
 function preencherHistorico(temp, hum, wind) {
   var historyContainer = document.getElementById("history-container");
   var dias = ["Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado", "Domingo"];
@@ -42,6 +45,7 @@ function preencherHistorico(temp, hum, wind) {
   historyContainer.innerHTML = htmlContent;
 }
 
+// Requisição AJAX ao ESP32
 function GetArduinoInputs() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -54,7 +58,7 @@ function GetArduinoInputs() {
           var hum = analogs[1].childNodes[0].nodeValue;
           var wind = analogs[2].childNodes[0].nodeValue;
 
-          // Trava ativada apenas após receber a primeira leitura real dos componentes
+          // Trava ativada apenas após receber a primeira leitura real do hardware
           if (!primeiraLeituraRealizada) {
             primeiraLeituraRealizada = true;
             document.getElementById("status-dot").classList.add("active");
@@ -74,6 +78,7 @@ function GetArduinoInputs() {
   setTimeout(GetArduinoInputs, 3000);
 }
 
+// Relógio em tempo real
 function DisplayCurrentTime() {
   var dt = new Date();
   var weekday = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"];
